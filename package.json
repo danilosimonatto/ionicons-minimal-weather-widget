@@ -7,6 +7,7 @@
   "files": [
     "weather-widget.js",
     "weather-widget.d.ts",
+    "astro",
     "README.md",
     "LICENSE"
   ],
@@ -14,7 +15,8 @@
     ".": {
       "types": "./weather-widget.d.ts",
       "default": "./weather-widget.js"
-    }
+    },
+    "./astro": "./astro/WeatherWidget.astro"
   },
   "dependencies": {
     "ionicons": "^8.0.13"

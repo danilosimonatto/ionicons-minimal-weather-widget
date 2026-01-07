@@ -29,6 +29,27 @@ You can then use the custom element in your HTML:
 ></weather-widget>
 ```
 
+## Astro
+
+Astro frontmatter runs on the server/build step, but this package registers a **browser custom element** (it uses `window`, `HTMLElement`, and `customElements`). That means the widget must still be loaded **client-side**.
+
+To make this easy, the package ships an Astro wrapper component that includes the needed module import for you:
+
+```astro
+---
+import WeatherWidget from "@danilosimonatto/ionicons-minimal-weather-widget/astro";
+---
+
+<WeatherWidget city="Milan" apiKey={import.meta.env.PUBLIC_OPENWEATHER_API_KEY} />
+```
+
+Props:
+
+- `city` (string, required)
+- `apiKey` (string, required)
+- `scale` ("C" | "F", optional, default "C")
+- `iconStyle` ("filled" | "outline" | "sharp", optional, default "filled")
+
 ## Options
 
 | Attribute    | Type                             | Description                                        | Example      |

@@ -1,0 +1,31 @@
+---
+type Props = {
+	city: string;
+	scale?: "C" | "F";
+	iconStyle?: "filled" | "outline" | "sharp";
+	apiKey: string;
+};
+
+const {
+	city,
+	scale = "C",
+	iconStyle = "filled",
+	apiKey,
+} = Astro.props as Props;
+---
+
+<weather-widget
+	city={city}
+	scale={scale}
+	icon-style={iconStyle}
+	api-key={apiKey}
+></weather-widget>
+
+<!--
+	This package defines a browser custom element, so it must be loaded client-side.
+	By placing this import in an inline module script, Astro/Vite will bundle it and
+	run it in the browser without the user needing a separate script file.
+-->
+<script type="module">
+	import "../weather-widget.js";
+</script>
