@@ -1,3 +1,6 @@
+import styles from "./styles.css?raw";
+import template from "./template.html?raw";
+
 import { defineCustomElements } from "ionicons/loader";
 import { addIcons } from "ionicons";
 import {
@@ -114,20 +117,12 @@ const ICON_CODE_TO_IONICON = {
 	"13n": "snow",
 };
 
-const escapeHtml = (input) => {
-	return String(input)
-		.replaceAll("&", "&amp;")
-		.replaceAll("<", "&lt;")
-		.replaceAll(">", "&gt;")
-		.replaceAll('"', "&quot;")
-		.replaceAll("'", "&#039;");
-};
-
 class WeatherWidgetElement extends HTMLElement {
 	static observedAttributes = ["city", "scale", "icon-style", "api-key"];
 
 	#abort = null;
 	#shadow = this.attachShadow({ mode: "open" });
+	#els = null;
 
 	connectedCallback() {
 		ensureIonicons().then(() => {
@@ -162,89 +157,61 @@ class WeatherWidgetElement extends HTMLElement {
 	}
 
 	#renderShell() {
-		this.#shadow.innerHTML = `
-			<style>
-				:host {
-					display: inline-block;
-				}
-				.weather-widget {
-					display: inline-flex;
-					flex-direction: column;
-					gap: 8px;
-					padding: 1.5rem;
-					background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-					border-radius: 16px;
-					color: white;
-					text-align: center;
-					box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-					min-width: 250px;
-					font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-				}
-				.loading,
-				.error {
-					font-size: 1rem;
-					padding: 1rem;
-				}
-				.error {
-					color: #ffebee;
-					background: rgba(255, 0, 0, 0.2);
-					border-radius: 8px;
-				}
-				.weather-content {
-					display: flex;
-					flex-direction: column;
-					gap: 12px;
-				}
-				.city-name {
-					font-size: 1.5rem;
-					font-weight: 600;
-					text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-				}
-				.weather {
-					display: flex;
-					gap: 12px;
-					align-items: center;
-					justify-content: center;
-					font-size: 2.5rem;
-					font-weight: 700;
-				}
-				.icon {
-					font-size: 3rem;
-					text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-				}
-				.temperature {
-					text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-				}
-			</style>
-			<div class="weather-widget" part="root">
-				<div class="loading" part="loading">Loading…</div>
-			</div>
-		`;
-	}
-
-	#setInner(html) {
+		this.#shadow.innerHTML = `<style>${styles}</style>${template}`;
 		const root = this.#shadow.querySelector(".weather-widget");
 		if (!root) return;
-		root.innerHTML = html;
+
+		this.#els = {
+			root,
+			loading: root.querySelector('[part="loading"]'),
+			content: root.querySelector('[part="content"]'),
+			city: root.querySelector('[part="city"]'),
+			icon: root.querySelector("ion-icon"),
+			temp: root.querySelector('[part="temperature"]'),
+			error: root.querySelector('[part="error"]'),
+		};
+	}
+
+	#showLoading() {
+		if (!this.#els) return;
+		this.#els.loading.hidden = false;
+		this.#els.content.hidden = true;
+		this.#els.error.hidden = true;
+	}
+
+	#showError(message) {
+		if (!this.#els) return;
+		this.#els.loading.hidden = true;
+		this.#els.content.hidden = true;
+		this.#els.error.hidden = false;
+		this.#els.error.textContent = message;
+	}
+
+	#showWeather({ cityName, iconName, tempText }) {
+		if (!this.#els) return;
+		this.#els.loading.hidden = true;
+		this.#els.error.hidden = true;
+		this.#els.content.hidden = false;
+
+		// Use textContent for safety; avoid innerHTML for dynamic content.
+		this.#els.city.textContent = cityName;
+		this.#els.icon.setAttribute("name", iconName);
+		this.#els.temp.textContent = tempText;
 	}
 
 	async #load() {
 		const city = this.city;
 		if (!city) {
-			this.#setInner(`<div class="error" part="error">Missing city</div>`);
+			this.#showError("Missing city");
 			return;
 		}
 
 		if (this.#abort) this.#abort.abort();
 		this.#abort = new AbortController();
 
-		this.#setInner(`<div class="loading" part="loading">Loading…</div>`);
+		this.#showLoading();
 
 		try {
-			// Mirrors the old Vue component's behavior:
-			// - OpenWeatherMap geocoding -> lat/lon
-			// - OpenWeatherMap weather in metric
-			// - Convert to Fahrenheit client-side if needed
 			const apiKey = this.apiKey;
 			if (!apiKey) throw new Error("Missing API key");
 
@@ -288,22 +255,16 @@ class WeatherWidgetElement extends HTMLElement {
 
 			const cityName = weather?.name || city;
 
-			this.#setInner(`
-				<div class="weather-content" part="content">
-					<div class="city-name" part="city">${escapeHtml(cityName)}</div>
-					<div class="weather" part="weather">
-						<ion-icon name="${iconName}" class="icon" aria-hidden="true"></ion-icon>
-						<span class="temperature" part="temperature">${temp}°${this.scale}</span>
-					</div>
-				</div>
-			`);
+			this.#showWeather({
+				cityName,
+				iconName,
+				tempText: `${temp}°${this.scale}`,
+			});
 		} catch (e) {
 			if (e instanceof DOMException && e.name === "AbortError") return;
 			const message =
 				e instanceof Error ? e.message : "Failed to fetch weather";
-			this.#setInner(
-				`<div class="error" part="error">${escapeHtml(message)}</div>`
-			);
+			this.#showError(message);
 		}
 	}
 }

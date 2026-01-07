@@ -77,6 +77,26 @@ Props:
 - 🎨 Customizable icon style and units
 - 🔐 Uses your OpenWeather API key via the `api-key` attribute
 
+## Development (editing HTML/CSS with formatting)
+
+The published widget bundle is **generated** so consumers can keep importing a single file.
+
+- Edit:
+  - `src/styles.css`
+  - `src/template.html`
+  - `src/weather-widget.vite.js`
+- Then run:
+
+```sh
+npm run build
+```
+
+For auto-rebuild while developing (e.g. with `npm link`), run:
+
+```sh
+npm run dev
+```
+
 ## License
 
 MIT

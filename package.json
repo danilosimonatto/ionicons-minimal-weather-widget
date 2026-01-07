@@ -4,21 +4,31 @@
   "type": "module",
   "license": "MIT",
   "author": "Danilo Simonatto",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite build --watch",
+    "prepack": "vite build"
+  },
   "files": [
-    "weather-widget.js",
+    "dist",
     "weather-widget.d.ts",
     "astro",
+    "src",
+    "vite.config.js",
     "README.md",
     "LICENSE"
   ],
   "exports": {
     ".": {
       "types": "./weather-widget.d.ts",
-      "default": "./weather-widget.js"
+      "default": "./dist/weather-widget.js"
     },
     "./astro": "./astro/WeatherWidget.astro"
   },
   "dependencies": {
     "ionicons": "^8.0.13"
+  },
+  "devDependencies": {
+    "vite": "^7.3.1"
   }
 }
