@@ -1,7 +1,8 @@
-import { defineCustomElements as f } from "ionicons/loader";
-import { addIcons as w } from "ionicons";
-import { helpCircleSharp as b, helpCircleOutline as S, helpCircle as x, snowSharp as C, snowOutline as O, snow as E, thunderstormSharp as k, thunderstormOutline as I, thunderstorm as v, rainySharp as A, rainyOutline as P, rainy as q, cloudyNightSharp as M, cloudyNightOutline as N, cloudyNight as U, cloudySharp as z, cloudyOutline as L, cloudy as $, partlySunnySharp as F, partlySunnyOutline as R, partlySunny as T, moonSharp as W, moonOutline as j, moon as K, sunnySharp as _, sunnyOutline as D, sunny as H } from "ionicons/icons";
+import { defineCustomElements as w } from "ionicons/loader";
+import { addIcons as f } from "ionicons";
+import { helpCircleSharp as S, helpCircleOutline as b, helpCircle as C, snowSharp as O, snowOutline as x, snow as E, thunderstormSharp as k, thunderstormOutline as I, thunderstorm as v, rainySharp as A, rainyOutline as P, rainy as q, cloudyNightSharp as M, cloudyNightOutline as N, cloudyNight as U, cloudySharp as L, cloudyOutline as $, cloudy as F, partlySunnySharp as R, partlySunnyOutline as T, partlySunny as W, moonSharp as j, moonOutline as z, moon as K, sunnySharp as _, sunnyOutline as D, sunny as H } from "ionicons/icons";
 const B = `:host {
+	--color-primary: #000;
 	display: inline-block;
 }
 
@@ -9,21 +10,11 @@ const B = `:host {
 	display: inline-flex;
 	flex-direction: column;
 	gap: 8px;
-	padding: 1.5rem;
-	background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-	border-radius: 16px;
-	color: white;
+	color: var(--color-primary, #000);
 	text-align: center;
-	box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-	min-width: 250px;
+	font-size: 1rem;
 	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
 		Oxygen, Ubuntu, Cantarell, sans-serif;
-}
-
-.loading,
-.error {
-	font-size: 1rem;
-	padding: 1rem;
 }
 
 .error {
@@ -35,26 +26,9 @@ const B = `:host {
 .weather-content {
 	display: flex;
 	flex-direction: row;
-	gap: 12px;
-	font-size: 2.5rem;
-	font-weight: 700;
+	gap: 5px;
 	align-items: center;
 	justify-content: center;
-}
-
-.city-name {
-	font-size: 1.5rem;
-	font-weight: 600;
-	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.icon {
-	font-size: 3rem;
-	text-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.temperature {
-	text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 `, J = `<div
 	class="weather-widget"
@@ -95,19 +69,19 @@ const B = `:host {
 `;
 let a;
 function G() {
-  return a || (w({
+  return a || (f({
     sunny: H,
     sunnyOutline: D,
     sunnySharp: _,
     moon: K,
-    moonOutline: j,
-    moonSharp: W,
-    partlySunny: T,
-    partlySunnyOutline: R,
-    partlySunnySharp: F,
-    cloudy: $,
-    cloudyOutline: L,
-    cloudySharp: z,
+    moonOutline: z,
+    moonSharp: j,
+    partlySunny: W,
+    partlySunnyOutline: T,
+    partlySunnySharp: R,
+    cloudy: F,
+    cloudyOutline: $,
+    cloudySharp: L,
     cloudyNight: U,
     cloudyNightOutline: N,
     cloudyNightSharp: M,
@@ -118,14 +92,14 @@ function G() {
     thunderstormOutline: I,
     thunderstormSharp: k,
     snow: E,
-    snowOutline: O,
-    snowSharp: C,
-    helpCircle: x,
-    helpCircleOutline: S,
-    helpCircleSharp: b
-  }), a = f(window)), a;
+    snowOutline: x,
+    snowSharp: O,
+    helpCircle: C,
+    helpCircleOutline: b,
+    helpCircleSharp: S
+  }), a = w(window)), a;
 }
-const Q = (n) => String(n || "").toUpperCase() === "F" ? "F" : "C", V = (n) => n === "outline" || n === "sharp" || n === "filled" ? n : "filled", X = (n, t) => t === "filled" ? n : `${n}-${t}`, Y = {
+const Q = (e) => String(e || "").toUpperCase() === "F" ? "F" : "C", V = (e) => e === "outline" || e === "sharp" || e === "filled" ? e : "filled", X = (e, t) => t === "filled" ? e : `${e}-${t}`, Y = {
   // 01d - sunny
   "01d": "sunny",
   "01n": "moon",
@@ -153,8 +127,8 @@ const Q = (n) => String(n || "").toUpperCase() === "F" ? "F" : "C", V = (n) => n
 };
 class Z extends HTMLElement {
   static observedAttributes = ["city", "scale", "icon-style", "api-key"];
-  #n = null;
-  #e = this.attachShadow({ mode: "open" });
+  #e = null;
+  #n = this.attachShadow({ mode: "open" });
   #t = null;
   connectedCallback() {
     G().then(() => {
@@ -162,7 +136,7 @@ class Z extends HTMLElement {
     });
   }
   disconnectedCallback() {
-    this.#n && this.#n.abort();
+    this.#e && this.#e.abort();
   }
   attributeChangedCallback() {
     this.isConnected && this.#i();
@@ -180,8 +154,8 @@ class Z extends HTMLElement {
     return (this.getAttribute("api-key") || "").trim();
   }
   #o() {
-    this.#e.innerHTML = `<style>${B}</style>${J}`;
-    const t = this.#e.querySelector(".weather-widget");
+    this.#n.innerHTML = `<style>${B}</style>${J}`;
+    const t = this.#n.querySelector(".weather-widget");
     t && (this.#t = {
       root: t,
       loading: t.querySelector('[part="loading"]'),
@@ -198,8 +172,8 @@ class Z extends HTMLElement {
   #r(t) {
     this.#t && (this.#t.loading.hidden = !0, this.#t.content.hidden = !0, this.#t.error.hidden = !1, this.#t.error.textContent = t);
   }
-  #a({ cityName: t, iconName: e, tempText: r }) {
-    this.#t && (this.#t.loading.hidden = !0, this.#t.error.hidden = !0, this.#t.content.hidden = !1, this.#t.city.textContent = t, this.#t.icon.setAttribute("name", e), this.#t.temp.textContent = r);
+  #a({ cityName: t, iconName: n, tempText: r }) {
+    this.#t && (this.#t.loading.hidden = !0, this.#t.error.hidden = !0, this.#t.content.hidden = !1, this.#t.city.textContent = t, this.#t.icon.setAttribute("name", n), this.#t.temp.textContent = r);
   }
   async #i() {
     const t = this.city;
@@ -207,33 +181,33 @@ class Z extends HTMLElement {
       this.#r("Missing city");
       return;
     }
-    this.#n && this.#n.abort(), this.#n = new AbortController(), this.#s();
+    this.#e && this.#e.abort(), this.#e = new AbortController(), this.#s();
     try {
-      const e = this.apiKey;
-      if (!e) throw new Error("Missing API key");
+      const n = this.apiKey;
+      if (!n) throw new Error("Missing API key");
       const r = new URL("https://api.openweathermap.org/geo/1.0/direct");
-      r.searchParams.set("q", t), r.searchParams.set("limit", "1"), r.searchParams.set("appid", e);
-      const c = await fetch(r, { signal: this.#n.signal });
+      r.searchParams.set("q", t), r.searchParams.set("limit", "1"), r.searchParams.set("appid", n);
+      const c = await fetch(r, { signal: this.#e.signal });
       if (!c.ok) throw new Error("City not found");
       const l = await c.json(), o = l && l[0];
       if (!o) throw new Error("City not found");
       const i = new URL(
         "https://api.openweathermap.org/data/2.5/weather"
       );
-      i.searchParams.set("lat", String(o.lat)), i.searchParams.set("lon", String(o.lon)), i.searchParams.set("units", "metric"), i.searchParams.set("appid", e);
+      i.searchParams.set("lat", String(o.lat)), i.searchParams.set("lon", String(o.lon)), i.searchParams.set("units", "metric"), i.searchParams.set("appid", n);
       const h = await fetch(i, {
-        signal: this.#n.signal
+        signal: this.#e.signal
       });
       if (!h.ok) throw new Error("Weather not available");
-      const s = await h.json(), d = s?.main?.temp, p = this.scale === "F" ? Math.round(d * 9 / 5 + 32) : Math.round(d), u = s?.weather?.[0]?.icon, y = u && Y[u] || "help-circle", m = X(y, this.iconStyle), g = s?.name || t;
+      const s = await h.json(), d = s?.main?.temp, y = this.scale === "F" ? Math.round(d * 9 / 5 + 32) : Math.round(d), u = s?.weather?.[0]?.icon, p = u && Y[u] || "help-circle", m = X(p, this.iconStyle), g = s?.name || t;
       this.#a({
         cityName: g,
         iconName: m,
-        tempText: `${p}°${this.scale}`
+        tempText: `${y}°${this.scale}`
       });
-    } catch (e) {
-      if (e instanceof DOMException && e.name === "AbortError") return;
-      const r = e instanceof Error ? e.message : "Failed to fetch weather";
+    } catch (n) {
+      if (n instanceof DOMException && n.name === "AbortError") return;
+      const r = n instanceof Error ? n.message : "Failed to fetch weather";
       this.#r(r);
     }
   }
