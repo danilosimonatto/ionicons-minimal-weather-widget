@@ -1,8 +1,6 @@
 import styles from "./styles.css?raw";
 import template from "./template.html?raw";
 
-import { defineCustomElements } from "ionicons/loader";
-import { addIcons } from "ionicons";
 import {
 	sunny,
 	sunnyOutline,
@@ -33,43 +31,6 @@ import {
 	helpCircleSharp,
 } from "ionicons/icons";
 
-let ioniconsInitPromise;
-function ensureIonicons() {
-	if (!ioniconsInitPromise) {
-		addIcons({
-			sunny,
-			sunnyOutline,
-			sunnySharp,
-			moon,
-			moonOutline,
-			moonSharp,
-			partlySunny,
-			partlySunnyOutline,
-			partlySunnySharp,
-			cloudy,
-			cloudyOutline,
-			cloudySharp,
-			cloudyNight,
-			cloudyNightOutline,
-			cloudyNightSharp,
-			rainy,
-			rainyOutline,
-			rainySharp,
-			thunderstorm,
-			thunderstormOutline,
-			thunderstormSharp,
-			snow,
-			snowOutline,
-			snowSharp,
-			helpCircle,
-			helpCircleOutline,
-			helpCircleSharp,
-		});
-		ioniconsInitPromise = defineCustomElements(window);
-	}
-	return ioniconsInitPromise;
-}
-
 const normalizeScale = (value) =>
 	String(value || "").toUpperCase() === "F" ? "F" : "C";
 
@@ -82,6 +43,36 @@ const normalizeIconStyle = (value) => {
 const styleIonicon = (baseName, style) => {
 	if (style === "filled") return baseName;
 	return `${baseName}-${style}`;
+};
+
+const ICON_SRC_BY_NAME = {
+	sunny,
+	"sunny-outline": sunnyOutline,
+	"sunny-sharp": sunnySharp,
+	moon,
+	"moon-outline": moonOutline,
+	"moon-sharp": moonSharp,
+	"partly-sunny": partlySunny,
+	"partly-sunny-outline": partlySunnyOutline,
+	"partly-sunny-sharp": partlySunnySharp,
+	cloudy,
+	"cloudy-outline": cloudyOutline,
+	"cloudy-sharp": cloudySharp,
+	"cloudy-night": cloudyNight,
+	"cloudy-night-outline": cloudyNightOutline,
+	"cloudy-night-sharp": cloudyNightSharp,
+	rainy,
+	"rainy-outline": rainyOutline,
+	"rainy-sharp": rainySharp,
+	thunderstorm,
+	"thunderstorm-outline": thunderstormOutline,
+	"thunderstorm-sharp": thunderstormSharp,
+	snow,
+	"snow-outline": snowOutline,
+	"snow-sharp": snowSharp,
+	"help-circle": helpCircle,
+	"help-circle-outline": helpCircleOutline,
+	"help-circle-sharp": helpCircleSharp,
 };
 
 // OpenWeather icon code mapping to Ionicons
@@ -125,10 +116,8 @@ class WeatherWidgetElement extends HTMLElement {
 	#els = null;
 
 	connectedCallback() {
-		ensureIonicons().then(() => {
-			this.#renderShell();
-			this.#load();
-		});
+		this.#renderShell();
+		this.#load();
 	}
 
 	disconnectedCallback() {
@@ -166,7 +155,7 @@ class WeatherWidgetElement extends HTMLElement {
 			loading: root.querySelector('[part="loading"]'),
 			content: root.querySelector('[part="content"]'),
 			city: root.querySelector('[part="city"]'),
-			icon: root.querySelector("ion-icon"),
+			icon: root.querySelector("img"),
 			temp: root.querySelector('[part="temperature"]'),
 			error: root.querySelector('[part="error"]'),
 		};
@@ -195,7 +184,7 @@ class WeatherWidgetElement extends HTMLElement {
 
 		// Use textContent for safety; avoid innerHTML for dynamic content.
 		this.#els.city.textContent = cityName;
-		this.#els.icon.setAttribute("name", iconName);
+		this.#els.icon.src = ICON_SRC_BY_NAME[iconName] || helpCircle;
 		this.#els.temp.textContent = tempText;
 	}
 
@@ -229,7 +218,7 @@ class WeatherWidgetElement extends HTMLElement {
 
 			// Step 2: Weather (metric, then optional conversion)
 			const weatherUrl = new URL(
-				"https://api.openweathermap.org/data/2.5/weather"
+				"https://api.openweathermap.org/data/2.5/weather",
 			);
 			weatherUrl.searchParams.set("lat", String(geo.lat));
 			weatherUrl.searchParams.set("lon", String(geo.lon));

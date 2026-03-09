@@ -12,9 +12,11 @@ export default defineConfig({
 			fileName: () => "weather-widget.js",
 		},
 		rollupOptions: {
-			// Keep dependency behavior identical to the hand-written module:
-			// consumers will still resolve `ionicons` from this package's dependencies.
-			external: (id) => id === "ionicons" || id.startsWith("ionicons/"),
+			output: {
+				// Emit a single browser-ready module so plain servers do not need to
+				// resolve bare `ionicons/*` imports at runtime.
+				inlineDynamicImports: true,
+			},
 		},
 	},
 });

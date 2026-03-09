@@ -12,6 +12,9 @@ const {
 	iconStyle = "filled",
 	apiKey,
 } = Astro.props as Props;
+
+// @ts-expect-error Vite resolves `?raw` imports for browser assets at build time.
+import widgetScript from "../dist/weather-widget.js?raw";
 ---
 
 <weather-widget
@@ -21,11 +24,9 @@ const {
 	api-key={apiKey}
 ></weather-widget>
 
-<!--
-	This package defines a browser custom element, so it must be loaded client-side.
-	By placing this import in an inline module script, Astro/Vite will bundle it and
-	run it in the browser without the user needing a separate script file.
--->
-<script type="module">
-	import "../dist/weather-widget.js";
-</script>
+<!-- Inline the built browser module to avoid server MIME-type issues. -->
+<script
+	type="module"
+	is:inline
+	set:html={widgetScript}
+></script>
