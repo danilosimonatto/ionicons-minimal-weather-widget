@@ -155,7 +155,7 @@ class WeatherWidgetElement extends HTMLElement {
 			loading: root.querySelector('[part="loading"]'),
 			content: root.querySelector('[part="content"]'),
 			city: root.querySelector('[part="city"]'),
-			icon: root.querySelector("img"),
+			icon: root.querySelector('[part="icon"]'),
 			temp: root.querySelector('[part="temperature"]'),
 			error: root.querySelector('[part="error"]'),
 		};
@@ -184,7 +184,9 @@ class WeatherWidgetElement extends HTMLElement {
 
 		// Use textContent for safety; avoid innerHTML for dynamic content.
 		this.#els.city.textContent = cityName;
-		this.#els.icon.src = ICON_SRC_BY_NAME[iconName] || helpCircle;
+		const iconSrc = ICON_SRC_BY_NAME[iconName] || helpCircle;
+		this.#els.icon.style.webkitMaskImage = `url("${iconSrc}")`;
+		this.#els.icon.style.maskImage = `url("${iconSrc}")`;
 		this.#els.temp.textContent = tempText;
 	}
 

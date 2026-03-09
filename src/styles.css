@@ -1,6 +1,15 @@
 :host {
 	--color-primary: #000;
+	--icon-color: #fff;
 	display: inline-block;
+}
+
+:host-context(:root[data-theme="light"]) {
+	--icon-color: #000;
+}
+
+:host-context(:root[data-theme="dark"]) {
+	--icon-color: #fff;
 }
 
 .weather-widget {
@@ -39,4 +48,13 @@
 .icon {
 	width: 1.2em;
 	height: 1.2em;
+	display: inline-block;
+	flex-shrink: 0;
+	background-color: var(--icon-color, #000);
+	-webkit-mask-position: center;
+	-webkit-mask-repeat: no-repeat;
+	-webkit-mask-size: contain;
+	mask-position: center;
+	mask-repeat: no-repeat;
+	mask-size: contain;
 }
