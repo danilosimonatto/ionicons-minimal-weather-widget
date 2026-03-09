@@ -1,6 +1,6 @@
-import { defineCustomElements as w } from "ionicons/loader";
-import { addIcons as f } from "ionicons";
-import { helpCircleSharp as S, helpCircleOutline as b, helpCircle as C, snowSharp as O, snowOutline as x, snow as E, thunderstormSharp as k, thunderstormOutline as I, thunderstorm as v, rainySharp as A, rainyOutline as P, rainy as q, cloudyNightSharp as M, cloudyNightOutline as N, cloudyNight as U, cloudySharp as L, cloudyOutline as $, cloudy as F, partlySunnySharp as R, partlySunnyOutline as T, partlySunny as W, moonSharp as j, moonOutline as z, moon as K, sunnySharp as _, sunnyOutline as D, sunny as H } from "ionicons/icons";
+import { defineCustomElement as f } from "ionicons/components/ion-icon.js";
+import { addIcons as w } from "ionicons";
+import { helpCircleSharp as S, helpCircleOutline as b, helpCircle as C, snowSharp as O, snowOutline as x, snow as E, thunderstormSharp as k, thunderstormOutline as v, thunderstorm as I, rainySharp as P, rainyOutline as A, rainy as q, cloudyNightSharp as M, cloudyNightOutline as N, cloudyNight as U, cloudySharp as L, cloudyOutline as $, cloudy as F, partlySunnySharp as R, partlySunnyOutline as T, partlySunny as W, moonSharp as j, moonOutline as z, moon as K, sunnySharp as _, sunnyOutline as D, sunny as H } from "ionicons/icons";
 const B = `:host {
 	--color-primary: #000;
 	display: inline-block;
@@ -69,7 +69,7 @@ const B = `:host {
 `;
 let a;
 function G() {
-  return a || (f({
+  return a || (w({
     sunny: H,
     sunnyOutline: D,
     sunnySharp: _,
@@ -86,10 +86,10 @@ function G() {
     cloudyNightOutline: N,
     cloudyNightSharp: M,
     rainy: q,
-    rainyOutline: P,
-    rainySharp: A,
-    thunderstorm: v,
-    thunderstormOutline: I,
+    rainyOutline: A,
+    rainySharp: P,
+    thunderstorm: I,
+    thunderstormOutline: v,
     thunderstormSharp: k,
     snow: E,
     snowOutline: x,
@@ -97,7 +97,7 @@ function G() {
     helpCircle: C,
     helpCircleOutline: b,
     helpCircleSharp: S
-  }), a = w(window)), a;
+  }), f(), a = Promise.resolve()), a;
 }
 const Q = (e) => String(e || "").toUpperCase() === "F" ? "F" : "C", V = (e) => e === "outline" || e === "sharp" || e === "filled" ? e : "filled", X = (e, t) => t === "filled" ? e : `${e}-${t}`, Y = {
   // 01d - sunny

@@ -1,7 +1,7 @@
 import styles from "./styles.css?raw";
 import template from "./template.html?raw";
 
-import { defineCustomElements } from "ionicons/loader";
+import { defineCustomElement as defineIonIconCustomElement } from "ionicons/components/ion-icon.js";
 import { addIcons } from "ionicons";
 import {
 	sunny,
@@ -65,7 +65,8 @@ function ensureIonicons() {
 			helpCircleOutline,
 			helpCircleSharp,
 		});
-		ioniconsInitPromise = defineCustomElements(window);
+		defineIonIconCustomElement();
+		ioniconsInitPromise = Promise.resolve();
 	}
 	return ioniconsInitPromise;
 }
